@@ -1,3 +1,0 @@
-from game import goose_game
-
-goose_game()
