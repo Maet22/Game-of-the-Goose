@@ -1,0 +1,74 @@
+import random
+
+class Player:
+  def __init__(self,name, color, plays=True, won=False, positions=[1], init=1):
+    self.name = name
+    self.color = color
+    self.plays = plays
+    self.positions=[1]
+    self.init = init
+    self.won=won
+  def __repr__(self):
+    return "{name} has the {color} color and is ready to compete".format(name=self.name, color=self.color)
+  def move(self, initial_position):
+    rand1 = random.randint(1,6)
+    rand2 = random.randint(1,6)
+    i= initial_position+rand1+rand2
+    # if square multiple of 9 reached, player advances 2*the number given by the dices
+    if i == 9 or i == 18 or i == 27 or i == 36 or i == 45 or i == 54:
+      print(self.name, "throws dices: it'a",rand1+rand2)
+      if (initial_position + (rand1+rand2) > 63):
+        return (63- (initial_position + (rand1+rand2) -63))        
+      if initial_position + (rand1+rand2) == 63:
+        print(self.name, "reached square 63 and won!")
+        self.won = True 
+        return (initial_position + (rand1+rand2) == 63)
+      else:
+        return (initial_position + (2*(rand1+rand2)))
+    # rule that square 42 sends back to square 30  
+    if i == 42:
+      print(self.name, "throws dices: it'a",rand1+rand2)
+      print("square 42! It will bring you back to square 30!")
+      return 30
+    # square 6 sends forward to square 12
+    if i == 6:
+      print(self.name, "throws dices: it'a",rand1+rand2)
+      print("Square 6! It will boost you till square 12!")
+      return 12
+    # Square 58 sends back to square 1
+    if i == 58:
+      print(self.name, "throws dices: it'a",rand1+rand2)
+      print("Square 58! Go back at the start!")
+      return 1
+    if i < 63:
+      # 6 and 3 at first throw takes directly to 26
+      if (initial_position == 1 and rand1 == 6 and rand2 == 3) or (initial_position == 1 and rand1 == 3 and rand2 == 6):
+        print(self.name, "throws dices: it'a",rand1+rand2)
+        print("You made a 6 and a 3 at first throw, you move to square 26!")
+        return 26
+      # 4 and 5 at first throw takes directly to 53
+      elif (initial_position == 1 and rand1 == 4 and rand2 == 5) or (initial_position == 1 and rand1 == 5 and rand2 == 4):
+        print(self.name, "throws dices: it'a",rand1+rand2)
+        print("You made a 4 and a 5 at first throw, you move to square 53!")
+        return 53
+      else:
+        print(self.name, "throws dices: it'a",rand1+rand2)
+        return(initial_position + (rand1+rand2))
+    elif i==63:
+      print(self.name, "throws dices: it'a",rand1+rand2)
+      print(self.name, "reached square 63 and won!")
+      self.won = True
+      return i
+    # when having initial square+dices number >63, one must go back from 63 the number of squares in excess
+    # if 9 squares in excess, go back to 54, but this involves to do a second time the same move, hence going to 72-(18*2)=36
+    elif i == 72: 
+      print(self.name,"throws dices: it'a",rand1+rand2)
+      return 36      
+    else:
+      print(self.name,"throws dices: it'a",rand1+rand2)
+      # if 5 squares in excess, back to 58 and to start as per 58's property
+      if (63-(i-63)) == 58:
+        print("square 58! Go back at the start!")
+        return 1
+      else:
+        return (63-(i-63))
